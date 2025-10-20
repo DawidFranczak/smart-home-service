@@ -18,6 +18,7 @@ async def get_humidity(
     end_date: Optional[datetime] = None,
 ):
     start_date, end_date = fill_default_date_range(start_date, end_date)
+    print(start_date, end_date)
     chart_data = await repository.get_sensor_humidities(device_id, start_date, end_date)
     aggregation_data = await repository.get_aggregation_data(
         device_id, start_date, end_date

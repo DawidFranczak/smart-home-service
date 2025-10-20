@@ -15,6 +15,7 @@ async def get_temperature(
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
 ):
+    print(start_date, end_date)
     start_date, end_date = fill_default_date_range(start_date, end_date)
     chart_data = await repository.get_sensor_temperatures(
         device_id, start_date, end_date

@@ -36,7 +36,7 @@ class HumidityRepository:
             ).where(
                 HumidityMeasurement.sensor_id == sensor_id,
                 HumidityMeasurement.timestamp >= start_date,
-                HumidityMeasurement.timestamp < end_date,
+                HumidityMeasurement.timestamp <= end_date,
             )
         )
         return value.mappings().all()[0]

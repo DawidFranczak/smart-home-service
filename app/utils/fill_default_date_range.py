@@ -11,4 +11,7 @@ def fill_default_date_range(
         end_date = start_date + timedelta(days=7)
     elif not start_date:
         start_date = end_date - timedelta(days=7)
+    else:
+        end_date += timedelta(days=1)
+
     return start_date, end_date

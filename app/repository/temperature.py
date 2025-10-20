@@ -38,7 +38,7 @@ class TemperatureRepository:
             ).where(
                 TemperatureMeasurement.sensor_id == sensor_id,
                 TemperatureMeasurement.timestamp >= start_date,
-                TemperatureMeasurement.timestamp < end_date,
+                TemperatureMeasurement.timestamp <= end_date,
             )
         )
         return value.mappings().all()[0]
