@@ -1,21 +1,16 @@
-from datetime import datetime
-from app.db.connection import get_session
-from app.models.measurement import TemperatureMeasurement
+from app.db.connection import get_session_cm
 from app.models.message import Message
+from app.repository.temperature import TemperatureRepository
+from app.utils.round_timestamp_to_nearest_hour import round_timestamp_to_nearest_hour
 
 
 class TemperatureService:
 
     async def add_from_message(self, message: Message):
-        async with get_session() as session:
-            timestamp = datetime.now()
-            if timestamp.minute > 30:
-                timestamp = timestamp.replace(hour=timestamp.hour + 1)
-            timestamp = timestamp.replace(minute=0)
-            measurement = TemperatureMeasurement(
-                sensor_id=message.device_id,
-                temperature=message.payload["temperature"],
-                timestamp=timestamp,
-            )
-            session.add(measurement)
-            await session.commit()
+        async with get_session_cm() as session:
+            timestamp = round_timestamp_to_nearest_hour()
+            if await TemperatureRepository(session).exists_by_timestamp_and_sensor_id(
+                message.device_id, timestamp
+            ):
+                return
+            await TemperatureRepository(session).add_from_message(message, timestamp)
