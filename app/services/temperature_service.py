@@ -1,14 +1,15 @@
+from datetime import datetime
+
 from app.db.connection import get_session_cm
 from app.models.message import Message
 from app.repository.temperature import TemperatureRepository
-from app.utils.round_timestamp_to_nearest_hour import round_timestamp_to_nearest_hour
 
 
 class TemperatureService:
 
     async def add_from_message(self, message: Message):
         async with get_session_cm() as session:
-            timestamp = round_timestamp_to_nearest_hour()
+            timestamp = datetime.fromisoformat(message.payload["timestamp"])
             if await TemperatureRepository(session).exists_by_timestamp_and_sensor_id(
                 message.device_id, timestamp
             ):

@@ -13,7 +13,7 @@ app.include_router(temperature_router)
 app.include_router(humidity_router)
 
 
-app.middleware("http")(check_auth_token)
+# app.middleware("http")(check_auth_token)
 
 
 @app.get("/")
