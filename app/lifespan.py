@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from app.db.connection import create_db_tables
 from app.enums.message_event import MessageEvent
 from app.models.message import Message
+from app.services.device_state_service import DeviceStateService
 from app.services.humidity_service import HumidityService
 from app.services.temperature_service import TemperatureService
 from app.settings.rebbitmq_settings import RabbitMQSettings
@@ -23,6 +24,7 @@ async def consume():
     queue_name = settings.QUEUE_NAME
     temperature_service = TemperatureService()
     humidity_service = HumidityService()
+    device_state_service = DeviceStateService()
 
     while True:
         try:
@@ -45,3 +47,7 @@ async def consume():
                                 temperature_service.add_from_message(data)
                             )
                             asyncio.create_task(humidity_service.add_from_message(data))
+                        case MessageEvent.STATE_CHANGE:
+                            asyncio.create_task(
+                                device_state_service.add_from_message(data)
+                            )
