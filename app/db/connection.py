@@ -36,7 +36,6 @@ async def get_session_cm() -> AsyncSession:
     """
     Async context manager that provides a new database session.
 
-    Sets the PostgreSQL search_path to the configured schema before yielding the session.
     Intended for manual usage with `async with` in services or repositories.
 
     Example:
@@ -44,9 +43,6 @@ async def get_session_cm() -> AsyncSession:
             await SomeRepository(session).do_something()
     """
     async with async_session_maker() as session:
-        await session.execute(
-            text(f"SET search_path TO {db_settings.POSTGRES_SEARCH_PATH}")
-        )
         yield session
 
 
@@ -64,9 +60,6 @@ async def get_session() -> AsyncSession:
             return result.scalars().all()
     """
     async with async_session_maker() as session:
-        await session.execute(
-            text(f"SET search_path TO {db_settings.POSTGRES_SEARCH_PATH}")
-        )
         yield session
 
 

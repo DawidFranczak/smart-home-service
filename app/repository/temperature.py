@@ -14,8 +14,9 @@ class TemperatureRepository:
         self.session = session
 
     async def get_sensor_temperatures(
-        self, sensor_id: str, start_date: datetime, end_date: datetime
+        self, sensor_id: int, start_date: datetime, end_date: datetime
     ):
+
         result = await self.session.execute(
             select(
                 TemperatureMeasurement.timestamp, TemperatureMeasurement.value
@@ -28,7 +29,7 @@ class TemperatureRepository:
         return result.mappings()
 
     async def get_aggregation_data(
-        self, sensor_id: str, start_date: datetime, end_date: datetime
+        self, sensor_id: int, start_date: datetime, end_date: datetime
     ) -> dict:
         value = await self.session.execute(
             select(
@@ -44,7 +45,7 @@ class TemperatureRepository:
         return value.mappings().all()[0]
 
     async def exists_by_timestamp_and_sensor_id(
-        self, sensor_id: str, timestamp: datetime
+        self, sensor_id: int, timestamp: datetime
     ) -> bool:
         result = await self.session.execute(
             select(TemperatureMeasurement).where(
