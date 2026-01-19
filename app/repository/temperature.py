@@ -60,6 +60,7 @@ class TemperatureRepository:
     async def add_from_message(self, message: Message, timestamp: datetime):
         measurement = TemperatureMeasurement(
             sensor_id=message.device_id,
+            home_id=message.home_id,
             value=message.payload["value"],
             timestamp=timestamp,
         )
