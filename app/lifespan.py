@@ -42,10 +42,11 @@ async def consume():
                 async with message.process():
                     data = Message.model_validate_json(message.body.decode())
                     match data.message_event:
-                        case MessageEvent.ON_MEASUREMENT_TEMP_HUM:
+                        case MessageEvent.ON_MEASURE_TEMPERATURE:
                             asyncio.create_task(
                                 temperature_service.add_from_message(data)
                             )
+                        case MessageEvent.ON_MEASURE_HUMIDITY:
                             asyncio.create_task(humidity_service.add_from_message(data))
                         case MessageEvent.STATE_CHANGE:
                             asyncio.create_task(

@@ -12,6 +12,7 @@ class DeviceStateRepository:
         state = DeviceState(
             timestamp=datetime.now(),
             device_id=message.device_id,
+            home_id=message.home_id,
             value=message.payload["state"],
         )
         self.session.add(state)
