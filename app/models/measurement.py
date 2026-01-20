@@ -23,12 +23,14 @@ class ReadData(BaseModel):
 class TemperatureMeasurement(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     value: float
-    sensor_id: str
+    sensor_id: int
+    home_id: int
     timestamp: datetime
 
 
 class HumidityMeasurement(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     value: float
-    sensor_id: str
+    sensor_id: int
+    home_id: int
     timestamp: datetime

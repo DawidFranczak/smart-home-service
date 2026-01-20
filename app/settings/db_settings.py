@@ -1,12 +1,12 @@
 from pydantic_settings import BaseSettings
 
+
 class DBSettings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
     POSTGRES_HOST: str
     POSTGRES_PORT: int
-    POSTGRES_SEARCH_PATH: str
 
     @property
     def db_url(self) -> str:

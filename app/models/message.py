@@ -1,13 +1,10 @@
-from sqlmodel import SQLModel
+from pydantic import BaseModel
 
 from app.enums.message_event import MessageEvent
-from app.enums.message_type import MessageType
 
 
-class Message(SQLModel):
-    message_type: MessageType
+class Message(BaseModel):
     message_event: MessageEvent
-    device_id: str
-    message_id: str
+    device_id: int
+    home_id: int
     payload: dict
-

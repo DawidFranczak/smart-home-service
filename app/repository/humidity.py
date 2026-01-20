@@ -14,7 +14,7 @@ class HumidityRepository:
         self.session = session
 
     async def get_sensor_humidities(
-        self, sensor_id: str, start_date: datetime, end_date: datetime
+        self, sensor_id: int, start_date: datetime, end_date: datetime
     ):
         result = await self.session.execute(
             select(HumidityMeasurement.timestamp, HumidityMeasurement.value).where(
@@ -26,7 +26,7 @@ class HumidityRepository:
         return result.mappings()
 
     async def get_aggregation_data(
-        self, sensor_id: str, start_date: datetime, end_date: datetime
+        self, sensor_id: int, start_date: datetime, end_date: datetime
     ) -> dict:
         value = await self.session.execute(
             select(
@@ -42,7 +42,7 @@ class HumidityRepository:
         return value.mappings().all()[0]
 
     async def exists_by_timestamp_and_sensor_id(
-        self, sensor_id: str, timestamp: datetime
+        self, sensor_id: int, timestamp: datetime
     ) -> bool:
         result = await self.session.execute(
             select(HumidityMeasurement).where(
@@ -57,7 +57,8 @@ class HumidityRepository:
     async def add_from_message(self, message: Message, timestamp: datetime):
         measurement = HumidityMeasurement(
             sensor_id=message.device_id,
-            value=message.payload["humidity"],
+            home_id=message.home_id,
+            value=message.payload["value"],
             timestamp=timestamp,
         )
         self.session.add(measurement)
