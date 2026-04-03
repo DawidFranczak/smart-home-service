@@ -25,6 +25,5 @@ class HistoryService:
             payload=event_data["payload"],
             timestamp=datetime.fromisoformat(raw_timestamp),
         )
-        print(event)
 
         await self.repository.add(event)

@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel, field_validator
-from sqlmodel import SQLModel, Field
+from pydantic import BaseModel
+from sqlmodel import SQLModel, Field, Index, Column, DateTime
 
 
 class AggregationData(BaseModel):
@@ -20,17 +20,20 @@ class ReadData(BaseModel):
     aggregation_data: AggregationData
 
 
-class TemperatureMeasurement(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    value: float
-    sensor_id: int
+class Measurement(SQLModel, table=True):
+    __table_args__ = (
+        Index(
+            "ix_measurement_device_id",
+            "device_id",
+            "peripheral_id",
+            "event",
+            "timestamp",
+        ),
+    )
+    id: Optional[int] = Field(default=None, primary_key=True)
+    event: str
+    device_id: str
+    peripheral_id: int
     home_id: int
-    timestamp: datetime
-
-
-class HumidityMeasurement(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
     value: float
-    sensor_id: int
-    home_id: int
-    timestamp: datetime
+    timestamp: datetime = Field(sa_column=Column(DateTime(timezone=True), index=True))

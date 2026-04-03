@@ -25,7 +25,7 @@ async def create_db_tables():
     """
     Asynchronously create all database tables defined in SQLModel metadata.
     """
-    from app.models.measurement import TemperatureMeasurement, HumidityMeasurement
+    from app.models.measurement import Measurement
 
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
