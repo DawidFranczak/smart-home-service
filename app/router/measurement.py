@@ -14,14 +14,12 @@ router = APIRouter(prefix="/measurement", tags=["measurement"])
 async def get_measurement(
     repository: MeasurementRepoDep,
     user: User,
-    device_id: str,
     peripheral_id: int,
     event: str,
     start_date: Optional[datetime] = None,
     end_date: Optional[datetime] = None,
 ) -> ReadData:
     measurement_filter = MeasurementFilter(
-        device_id=device_id,
         peripheral_id=peripheral_id,
         event=event,
         start_date=start_date,

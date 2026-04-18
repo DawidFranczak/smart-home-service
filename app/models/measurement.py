@@ -24,7 +24,6 @@ class Measurement(SQLModel, table=True):
     __table_args__ = (
         Index(
             "ix_measurement_device_id",
-            "device_id",
             "peripheral_id",
             "event",
             "timestamp",

@@ -7,7 +7,6 @@ from app.utils.fill_default_date_range import fill_default_date_range
 
 
 class MeasurementFilter(BaseModel):
-    device_id: str
     peripheral_id: int
     event: str
     start_date: datetime
@@ -22,7 +21,6 @@ class MeasurementFilter(BaseModel):
             end = data.get("end_date")
 
             new_start, new_end = fill_default_date_range(start, end)
-
             data["start_date"] = new_start
             data["end_date"] = new_end
         return data

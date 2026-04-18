@@ -19,7 +19,6 @@ class MeasurementRepository:
         result = await self.session.execute(
             select(Measurement.timestamp, Measurement.value).where(
                 Measurement.event == measurement_filter.event,
-                Measurement.device_id == measurement_filter.device_id,
                 Measurement.peripheral_id == measurement_filter.peripheral_id,
                 Measurement.timestamp >= measurement_filter.start_date,
                 Measurement.timestamp < measurement_filter.end_date,
@@ -35,13 +34,12 @@ class MeasurementRepository:
                 func.min(Measurement.value),
             ).where(
                 Measurement.event == measurement_filter.event,
-                Measurement.device_id == measurement_filter.device_id,
                 Measurement.peripheral_id == measurement_filter.peripheral_id,
                 Measurement.timestamp >= measurement_filter.start_date,
                 Measurement.timestamp < measurement_filter.end_date,
             )
         )
-        return value.mappings().all().first()
+        return value.mappings().all()[0]
 
 
 MeasurementRepoDep = Annotated[MeasurementRepository, Depends(MeasurementRepository)]
