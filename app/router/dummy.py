@@ -3,7 +3,6 @@ from time import time
 from datetime import datetime, timedelta
 import random
 from app.db.connection import SessionDB
-from app.models.measurement import HumidityMeasurement, TemperatureMeasurement
 
 router = APIRouter(prefix="/dummy", tags=["dummy"])
 
@@ -27,20 +26,7 @@ async def dummy_temp_hum(db: SessionDB):
         new_temp += random.uniform(-1.0, 1.0)
         new_temp = max(min(new_temp, temp_max), temp_min)
         new_hum = max(min(new_hum, hum_max), hum_min)
-        hum_list.append(
-            HumidityMeasurement(
-                sensor_id=mac,
-                value=round(new_hum, 2),
-                timestamp=start_date,
-            )
-        )
-        tem_list.append(
-            TemperatureMeasurement(
-                sensor_id=mac,
-                value=round(new_temp, 2),
-                timestamp=start_date,
-            )
-        )
+
         start_date += timedelta(hours=1)
     db.add_all(hum_list)
     db.add_all(tem_list)
