@@ -20,17 +20,6 @@ async_session_maker = sessionmaker(
 )
 
 
-# Create the database tables
-async def create_db_tables():
-    """
-    Asynchronously create all database tables defined in SQLModel metadata.
-    """
-    from app.models.measurement import Measurement
-
-    async with engine.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.create_all)
-
-
 @asynccontextmanager
 async def get_session_cm() -> AsyncSession:
     """

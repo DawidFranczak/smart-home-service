@@ -8,6 +8,7 @@ class RabbitMQSettings(BaseSettings):
     NOTIFICATION_QUEUE: str
     EVENTS_QUEUE: str
     METRICS_QUEUE: str
+    EXCHANGE: str
 
     @property
     def amqp_url(self) -> str:
