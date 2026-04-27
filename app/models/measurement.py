@@ -30,6 +30,7 @@ class Measurement(SQLModel, table=True):
         ),
     )
     id: Optional[int] = Field(default=None, primary_key=True)
+    message_id: str = Field(unique=True, index=True)
     event: str
     device_id: str
     peripheral_id: int

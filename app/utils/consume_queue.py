@@ -11,13 +11,19 @@ from app.settings.rebbitmq_settings import RabbitMQSettings
 logger = logging.getLogger(__name__)
 
 
-async def consume_queue(queue_name: str, service_cls: Type[RabbitProcessor]):
+async def consume_queue(
+    exchange: str, queue_name: str, service_cls: Type[RabbitProcessor]
+):
     settings = RabbitMQSettings()
     connection = await aiormq.connect(settings.amqp_url)
     channel = await connection.channel()
     await channel.queue_declare(queue_name, durable=True)
+    await channel.exchange_declare(exchange, exchange_type="topic")
+    await channel.queue_bind(queue_name, exchange, f"sensor_service.{queue_name}")
+    await channel.queue_bind(queue_name, exchange, f"sensor_service.{queue_name}.*")
 
     async def on_message(message: DeliveredMessage):
+        print(message.body)
         delivery_tag = message.delivery.delivery_tag
         try:
             async with get_session_cm() as session:
@@ -29,7 +35,7 @@ async def consume_queue(queue_name: str, service_cls: Type[RabbitProcessor]):
             await message.channel.basic_nack(delivery_tag, requeue=True)
 
     await channel.basic_consume(queue_name, on_message)
-    logger.debug(f"[*] Started consuming {queue_name}")
+    logger.debug(f"Started consuming {queue_name}")
     try:
         await asyncio.Future()
     except asyncio.CancelledError:
