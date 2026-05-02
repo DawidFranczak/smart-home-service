@@ -17,12 +17,14 @@ class MeasurementRepository:
 
     async def get_raw_data(self, measurement_filter: MeasurementFilter):
         result = await self.session.execute(
-            select(Measurement.timestamp, Measurement.value).where(
+            select(Measurement.timestamp, Measurement.value)
+            .where(
                 Measurement.event == measurement_filter.event,
                 Measurement.peripheral_id == measurement_filter.peripheral_id,
                 Measurement.timestamp >= measurement_filter.start_date,
                 Measurement.timestamp < measurement_filter.end_date,
             )
+            .order_by(Measurement.timestamp)
         )
         return result.mappings()
 
