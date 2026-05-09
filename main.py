@@ -5,7 +5,11 @@ from app.router.dummy import router as dummy_router
 from app.router.measurement import router as measurement_router
 from prometheus_fastapi_instrumentator import Instrumentator
 
+from logger.rabbit_consumer import setup_rabbit_consumer_logger
+
 origins = ["http://localhost:5173"]
+
+setup_rabbit_consumer_logger()
 
 app = FastAPI(lifespan=startup_event)
 Instrumentator().instrument(app).expose(app)
